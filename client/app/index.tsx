@@ -86,6 +86,21 @@ export default function Index() {
 
           return true;
         }
+
+        // optional update 
+        Alert.alert(
+          "Update Available",
+          "A new version is available",
+          [
+            { text: "Later" },
+            {
+              text: "Update",
+              onPress: () => Linking.openURL(res.data.apkUrl),
+            },
+          ]
+        );
+
+        return false; // allow app if not forced
       }
 
       return false;
