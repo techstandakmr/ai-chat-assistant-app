@@ -1,8 +1,8 @@
 import express from "express";
 import { jwtVerify } from "../middlewares/jwtVerify.js";
-
 // Controllers
 import {
+  version,
   signup,
   login,
   getProfile,
@@ -20,6 +20,9 @@ import {
 
 
 const router = express.Router();
+
+// version route
+router.get("/app-version", version);
 
 // auth & user routes
 router.post("/auth/signup", signup);

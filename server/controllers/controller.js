@@ -24,7 +24,9 @@ import {
     deleteConversation,
     deleteAllConversations
 } from "../controllers/conversation.controller.js";
+import { version } from "./version.controller.js";
 export {
+    version,
     signup,
     login,
     getProfile,

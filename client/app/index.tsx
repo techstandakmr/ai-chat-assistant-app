@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
-import { Animated, Image, StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Alert, Animated, Image, Linking, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import { useUser } from "../context/UserContext";
 import { useChat } from "../context/ChatContext";
+import api from "@/services/apiClient";
 import { getProfileAPI } from "@/services/user.api";
 import { getConversationsAPI } from "@/services/conversation.api";
 import { showError } from "@/utils/toast";
@@ -50,16 +51,59 @@ export default function Index() {
   const { setUser } = useUser();
   const { setConversations } = useChat();
   const router = useRouter();
+  const checkForUpdate = async () => {
+    const isNewerVersion = (current: string, latest: string) => {
+      const c = current.split('.').map(Number);
+      const l = latest.split('.').map(Number);
 
+      for (let i = 0; i < l.length; i++) {
+        if ((l[i] || 0) > (c[i] || 0)) return true;
+        if ((l[i] || 0) < (c[i] || 0)) return false;
+      }
+
+      return false;
+    };
+    try {
+      const res = await api.get("/app-version");
+
+      const currentVersion = "1.0.0";
+      const latestVersion = res.data.latestVersion;
+
+      if (isNewerVersion(currentVersion, latestVersion)) {
+
+        if (res.data.forceUpdate) {
+          Alert.alert(
+            "Update Required",
+            "You must update to continue",
+            [
+              {
+                text: "Update",
+                onPress: () => Linking.openURL(res.data.apkUrl),
+              },
+            ],
+            { cancelable: false }
+          );
+
+          return true;
+        }
+      }
+
+      return false;
+    } catch (err) {
+      console.log("Update check failed", err);
+      return false;
+    }
+  };
   useEffect(() => {
-    async function getUserProfile() {
+    async function initApp() {
+      let hasUpdate = await checkForUpdate();
+      if (hasUpdate) return;
       if (!isConnected) {
         showError("Please check your connection");
         return;
       }
 
       if (loading) return; // Wait for auth state to resolve before routing
-
       if (isAuthenticated) {
         try {
           // Fetch profile and conversations in sequence, then enter the app
@@ -77,8 +121,8 @@ export default function Index() {
       }
     }
 
-    getUserProfile();
-  }, [isAuthenticated, loading]); // Re-run if auth state changes
+    initApp();
+  }, [isAuthenticated, loading]);
 
   return (
     <>
