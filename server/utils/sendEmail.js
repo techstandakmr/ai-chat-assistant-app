@@ -60,7 +60,7 @@ export const sendEmail = async (to, subject, html) => {
             },
         });
         const mailOptions = {
-            from: `"Chat App" <${process.env.MAIL_USER}>`, // Sender email and name
+            from: `"AI Chat Assistant" <${process.env.MAIL_USER}>`, // Sender email and name
             to,      // Recipient email
             subject, // Email subject
             html,    // Email content as HTML
