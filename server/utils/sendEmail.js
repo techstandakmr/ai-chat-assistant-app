@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import axios from "axios";
 export const otpEmailTemplate = (name, otp) => {
     return `
     <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:30px;">
@@ -51,21 +52,24 @@ export const otpEmailTemplate = (name, otp) => {
 
 export const sendEmail = async (to, subject, html) => {
     try {
-        // create nodemailer transporter for each sendEmail call
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.MAIL_USER,
-                pass: process.env.MAIL_PASSWORD,
+        await axios.post(
+            'https://api.brevo.com/v3/smtp/email',
+            {
+                sender: {
+                    name: "AI Chat Assistant",
+                    email: process.env.EMAIL_USER
+                },
+                to: [{ email: to }],
+                subject,
+                htmlContent: html,
             },
-        });
-        const mailOptions = {
-            from: `"AI Chat Assistant" <${process.env.MAIL_USER}>`, // Sender email and name
-            to,      // Recipient email
-            subject, // Email subject
-            html,    // Email content as HTML
-        };
-        await transporter.sendMail(mailOptions); // Send email
+            {
+                headers: {
+                    'api-key': process.env.BREVO_API_KEY,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
         return { message: "OTP sent to your email", success: true };
     } catch (err) {
         return { data: err.response?.data || err.message, success: false }
