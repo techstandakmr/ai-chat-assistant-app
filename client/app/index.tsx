@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message";
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import { useNetwork } from "@/context/NetworkContext";
+import * as Application from 'expo-application';
 // Animated loading indicator — three dots bouncing in sequence
 function BouncingDots() {
   const dots = [useRef(new Animated.Value(0)).current, useRef(new Animated.Value(0)).current, useRef(new Animated.Value(0)).current];
@@ -66,7 +67,7 @@ export default function Index() {
     try {
       const res = await api.get("/app-version");
 
-      const currentVersion = "1.0.0";
+      const currentVersion = Application.nativeApplicationVersion || "1.0.0";
       const latestVersion = res.data.latestVersion;
 
       if (isNewerVersion(currentVersion, latestVersion)) {
