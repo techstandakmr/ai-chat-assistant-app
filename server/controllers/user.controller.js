@@ -12,7 +12,7 @@ cloudinary.config({
 
 export const getProfile = async (req, res) => {
     try {
-        // userID comes from the decoded JWT set by auth middleware
+        // id comes from the decoded JWT set by auth middleware
         const { id } = req.userData;
         const user = await User.findById(id);
         res.json({
