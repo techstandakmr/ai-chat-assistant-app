@@ -144,7 +144,7 @@ export default function Index() {
     <>
       <View style={styles.container}>
         {/* Logo */}
-        <Image source={require("../assets/images/app-logo.png")} style={styles.logo} resizeMode="contain" />
+                <Image source={require("../assets/images/app_logo.png")} style={styles.logo} resizeMode="contain" />
 
         {/* App name + tagline */}
         <ThemedText style={styles.appName}>AI Chat Assistant</ThemedText>

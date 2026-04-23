@@ -27,7 +27,7 @@ import { useNetwork } from "@/context/NetworkContext";
 export default function ChatBox() {
     const router = useRouter();
     const colorScheme = useColorScheme();
-    const { openedConversationID, conversations, setConversations, chats, clearChats, addChats } = useChat();
+    const { openedConversationID, conversations, setConversations, chats, addChats,setChats } = useChat();
     const { user } = useUser();
     const [openSidebar, setOpenSidebar] = useState(false);
     // Sidebar slides in/out from -260 (hidden) to 0 (visible)
@@ -48,7 +48,7 @@ export default function ChatBox() {
             }
             try {
                 setLoading(true);
-                clearChats(); // Clear previous conversation's messages before loading new ones
+                setChats([]);
                 const res = await getChatsAPI(openedConversationID!);
                 addChats(res.data || []);
             } catch (err: any) {
@@ -194,7 +194,7 @@ export default function ChatBox() {
                             keyExtractor={(item) => item.chatID}
                             contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: 10 }}
                             keyboardShouldPersistTaps="handled"
-                            keyboardDismissMode="on-drag" // Dismiss keyboard when user scrolls
+                            // keyboardDismissMode="on-drag" // Dismiss keyboard when user scrolls
                             renderItem={({ item }) => (
                                 <View
                                     style={[

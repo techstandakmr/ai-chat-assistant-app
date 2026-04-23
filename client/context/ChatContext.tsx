@@ -24,6 +24,7 @@ type ChatContextType = {
   setConversations: (c: Conversation[]) => void;
   addChats: (m: Chat[]) => void;
   clearChats: () => void;
+  setChats:(m: Chat[]) => void;
 };
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -55,8 +56,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     setChats([]);
     setOpenedConversationID(null);
   };
-
-  return (
+  console.log("CNTXT",conversations);
+    return (
     <ChatContext.Provider
       value={{
         openedConversationID,
@@ -65,7 +66,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         chats,
         setConversations,
         addChats,
-        clearChats
+        clearChats,
+        setChats
       }}
     >
       {children}
