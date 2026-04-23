@@ -96,7 +96,7 @@ export default function ChatBox() {
                 conversationID: openedConversationID!,
                 repliedToChatID: null,
             });
-            const responseChats = res.data?.messages || [];
+            const responseChats = res.data?.chats || [];
 
             // Update lastActivity on the conversation so the sidebar list stays sorted correctly
             let updatedConversations = conversations?.map((c) => {
